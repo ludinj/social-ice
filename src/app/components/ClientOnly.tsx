@@ -1,5 +1,6 @@
 'use client';
 import { type FC, type ReactNode, useEffect, useState } from 'react';
+import Loader from './ui/Loader';
 
 interface ClientOnlyProps {
   children: ReactNode;
@@ -11,7 +12,7 @@ const ClientOnly: FC<ClientOnlyProps> = ({ children }) => {
     setHasMounted(true);
   }, []);
   if (!hasMounted) {
-    return null;
+    return <Loader />;
   }
   return <>{children}</>;
 };

@@ -1,19 +1,26 @@
-'use client';
-import ClientOnly from './components/ClientOnly';
-import Container from './components/Container';
-import PostCard from './components/PostCard';
+import NewPost from './components/NewPost';
+import PostCard from './components/postcard/PostCard';
+import RightBar from './components/RightBar';
+import getCurrentUser from '../actions/getCurrentUser';
+import HeaderTabs from './components/HeaderTabs';
 
-export default function Home() {
+import { type IPost } from '@/types';
+import PostFeed from './components/post-feed/PostFeed';
+
+export default async function Home() {
+  const currentUser = await getCurrentUser();
+  console.log(currentUser);
+
   return (
-    <ClientOnly>
-      <Container>
-        <div className="w-full grid grid-cols-3 h-[200vh] bg-red-500 ">
-          <div className="col-span-2 h-full bg-white px-8 py-2">
-            <PostCard />
-          </div>
-          <div className="col-span-1 h-full bg-white px-8 py-2">col3</div>
-        </div>
-      </Container>
-    </ClientOnly>
+    <main className="flex  gap-4 w-[800px] flex-grow ">
+      <div className="h-full w-full max-w-[600px] flex  flex-col ">
+        <HeaderTabs />
+        {currentUser && <NewPost currentUser={currentUser} />}
+        <PostFeed />
+      </div>
+      <div className="h-full w-[350px] px-4 hidden lg:flex flex-col bg-red-50 mr-2  ">
+        <RightBar currentUser={currentUser} />
+      </div>
+    </main>
   );
 }
