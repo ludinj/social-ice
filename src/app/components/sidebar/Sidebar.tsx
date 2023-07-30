@@ -8,11 +8,8 @@ import { BsBookmark } from 'react-icons/bs';
 import { MdNotificationsNone } from 'react-icons/md';
 import ProfileButton from './ProfileButton';
 
-import { type FC } from 'react';
 import { TbDiamondFilled } from 'react-icons/tb';
-interface SidebarProps {
-  // currentUser?: SafeUser | null;
-}
+
 const sidebarItems = [
   {
     label: 'Inbox',
@@ -44,7 +41,7 @@ const sidebarItems = [
     path: '/profile'
   }
 ];
-const Sidebar: FC<SidebarProps> = ({}) => {
+const Sidebar = () => {
   const { status, data } = useSession();
 
   if (status === 'loading') {

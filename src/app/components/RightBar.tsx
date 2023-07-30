@@ -3,16 +3,17 @@ import { Button, Card, CardBody, Typography } from '@material-tailwind/react';
 import React, { type FC } from 'react';
 import { signIn, signOut } from 'next-auth/react';
 import { type SafeUser } from '../../types';
+import { useSession } from 'next-auth/react';
 import useRegisterModal from '@/hooks/useRegisterModal';
 import useLoginModal from '@/hooks/useLoginModal';
 
-interface RightBarProps {
-  currentUser?: SafeUser | null;
-}
+interface RightBarProps {}
 
-const RightBar: FC<RightBarProps> = ({ currentUser }) => {
+const RightBar: FC<RightBarProps> = ({}) => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
+  const { status, data } = useSession();
+  const currentUser = data?.user;
   return (
     <div className="w-full  h-52 bg-red-200 rounded-xl">
       <Card>
