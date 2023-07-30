@@ -4,7 +4,6 @@ import {
   Card,
   CardBody,
   CardFooter,
-  Spinner,
   Typography,
   Progress
 } from '@material-tailwind/react';
@@ -18,12 +17,14 @@ import { type SafeUser } from '../../types';
 import useUnderDevModal from '../../hooks/useUnderDevModal';
 import useCreatePost from '@/hooks/useCreatePost';
 import { cn } from '@/libs/utils';
-
+import { useSession } from 'next-auth/react';
 interface NewPostProps {
   currentUser: SafeUser | null;
+  parentPostId?: string;
 }
 
-const NewPost: FC<NewPostProps> = ({ currentUser }) => {
+const NewPost: FC<NewPostProps> = ({ currentUser, parentPostId }) => {
+  const { data } = useSession();
   const devModal = useUnderDevModal();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [focused, setFocused] = useState<boolean>(false);
@@ -39,13 +40,13 @@ const NewPost: FC<NewPostProps> = ({ currentUser }) => {
 
   const handlePostClick = useCallback(async () => {
     if (!currentUser || postDescription === null) return;
-    await createPost(postDescription, selectedImage, currentUser);
+    await createPost(postDescription, selectedImage, currentUser, parentPostId);
     setFocused(false);
     setSelectedImage(null);
     setPostDescription(null);
-  }, [currentUser, postDescription, selectedImage, createPost]);
+  }, [currentUser, postDescription, selectedImage, createPost, parentPostId]);
   return (
-    <Card className="flex flex-col  rounded-none mb-1">
+    <div className="flex flex-col  rounded-none mb-1 shadow-none ">
       {progress > 0 && (
         <Progress
           value={progress}
@@ -53,7 +54,7 @@ const NewPost: FC<NewPostProps> = ({ currentUser }) => {
           className="h-[3px] w-full rounded-md"
         />
       )}
-      <CardBody className="flex flex-col gap-2  items-center justify-center py-4 relative">
+      <div className="flex flex-col gap-2  items-center justify-center py-4 relative">
         <div
           className={cn(
             'absolute w-full h-full  z-10 top-0 left-0 bg-neutral-200/50',
@@ -126,9 +127,9 @@ const NewPost: FC<NewPostProps> = ({ currentUser }) => {
             />
           </div>
         )}
-      </CardBody>
+      </div>
       {!isSubmitting && (
-        <CardFooter className="flex justify-between  items-center  py-2">
+        <div className="flex justify-between  items-center  py-2">
           <div className="flex gap-4">
             <label>
               <input
@@ -166,9 +167,9 @@ const NewPost: FC<NewPostProps> = ({ currentUser }) => {
           >
             Post
           </Button>
-        </CardFooter>
+        </div>
       )}
-    </Card>
+    </div>
   );
 };
 
