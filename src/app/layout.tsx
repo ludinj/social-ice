@@ -10,8 +10,6 @@ import CommentModal from './components/commentModal/CommentModal';
 import Providers from '@/providers/Providers';
 import RegisterModal from './components/modal/RegisterModal';
 import LoginModal from './components/modal/LoginModal';
-import getCurrentUser from '@/actions/getCurrentUser';
-import RightBar from './components/RightBar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,8 +23,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const currentUser = await getCurrentUser();
-  console.log(currentUser);
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -35,7 +31,7 @@ export default async function RootLayout({
             <UnderDevModal />
             <RegisterModal />
             <LoginModal />
-            <CommentModal currentUser={currentUser} />
+            <CommentModal />
             <Container>
               <Sidebar />
               {children}

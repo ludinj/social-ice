@@ -7,7 +7,7 @@ import {
   Typography
 } from '@material-tailwind/react';
 import Image from 'next/image';
-import React, { useState, type FC, useEffect } from 'react';
+import React, { useState, type FC } from 'react';
 import { SlOptions } from 'react-icons/sl';
 import { BiMessageDetail } from 'react-icons/bi';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
@@ -28,7 +28,6 @@ const PostCard: FC<PostCardProps> = ({ post }) => {
   const { data } = useSession();
   const loginModal = useLoginModal();
   const currentUser = data?.user;
-
   const [isLiked, setIsLiked] = useState<boolean>(
     post.likesId.includes(currentUser?.id ?? '')
   );

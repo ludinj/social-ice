@@ -6,14 +6,13 @@ import prisma from '../../../libs/prismadb';
 export async function POST(req: Request) {
   if (req.method === 'POST') {
     const body = await req.json();
-    const { postId, userId, text } = body;
+    const { authorId, description } = body;
 
     try {
-      const comment = await prisma.comment.create({
+      const comment = await prisma.post.create({
         data: {
-          text,
-          userId,
-          postId
+          description,
+          authorId
         }
       });
 
