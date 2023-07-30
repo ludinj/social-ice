@@ -9,7 +9,6 @@ export type SafeUser = Omit<
   updatedAt: string;
   emailVerified: string | null;
   role?: string;
-  accessToken: string;
 };
 
 export interface IPost extends Post {

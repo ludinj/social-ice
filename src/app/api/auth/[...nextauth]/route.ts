@@ -5,6 +5,8 @@ import GoogleProvider from 'next-auth/providers/google';
 import prisma from '@/libs/prismadb';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import bcrypt from 'bcrypt';
+import getCurrentUser from '@/actions/getCurrentUser';
+
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -20,6 +22,7 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         // check to see if email and password is there
+
         if (!credentials?.email || !credentials.password) {
           throw new Error('Please enter an email and password');
         }
@@ -30,13 +33,12 @@ export const authOptions: AuthOptions = {
             email: credentials.email
           }
         });
-
         // if no user was found
         if (!user ?? !user?.hashedPassword) {
           throw new Error('No user found');
         }
 
-        // check to see if password matches
+        // check to see if password git as
         const passwordMatch = await bcrypt.compare(
           credentials.password,
           user.hashedPassword
@@ -52,16 +54,13 @@ export const authOptions: AuthOptions = {
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      return { ...token, ...user };
-    },
-
-    async session({ session, token }) {
-      session.user = token as any;
+    async session({ session }) {
+      const currentUser = await getCurrentUser(session);
+      session.user = currentUser;
       return session;
     }
   },
-  secret: process.env.SECRET_KEY as string,
+  secret: process.env.SECRET_KEY,
   session: {
     strategy: 'jwt' as SessionStrategy
   },

@@ -2,7 +2,8 @@ import prisma from '../../../libs/prismadb';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]/route';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { type NextApiResponse } from 'next';
+import { type Post } from '@prisma/client';
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -19,9 +20,9 @@ export async function POST(req: Request) {
   if (!currentUser) {
     return null;
   }
-  const body = await req.json();
+  const body: Post = await req.json();
 
-  const { description, imageUrl } = body;
+  const { description, imageUrl, parentPostId } = body;
 
   try {
     const post = await prisma.post.create({
@@ -31,27 +32,33 @@ export async function POST(req: Request) {
         author: {
           connect: { id: currentUser.id }
         },
-        commentsId: [],
-        likesId: []
+        ...(parentPostId && {
+          parentPost: {
+            connect: { id: parentPostId }
+          }
+        })
       }
     });
-
+    console.log(post);
     return NextResponse.json(post);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function GET(res: NextApiResponse) {
-  console.log('called');
   try {
     const posts = await prisma.post.findMany({
+      where: { parentPost: null },
       include: {
-        comments: true, // Include comments in the response',
+        replies: true, // Include comments in the response',
         author: true
       },
       orderBy: {
         createdAt: 'desc'
       }
     });
+    console.log(posts);
     return NextResponse.json(posts);
   } catch (error) {
     console.log(error);

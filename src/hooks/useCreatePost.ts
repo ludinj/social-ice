@@ -11,13 +11,16 @@ const useCreatePost = () => {
     async (
       postDescription: string,
       selectedImage: File | null,
-      currentUser: SafeUser
+      currentUser: SafeUser,
+      parentPostId?: string
     ) => {
       const newPost = {
         id: currentUser.id,
         description: postDescription,
-        imageUrl: null
+        imageUrl: null,
+        parentPostId
       };
+
       setIsSubmitting(true);
       if (selectedImage) {
         const formData = new FormData();

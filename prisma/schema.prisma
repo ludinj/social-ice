@@ -25,8 +25,7 @@ model User {
   favoriteIds     String[] @db.ObjectId
   accounts        Account[]
   posts           Post[]
-  comments        Comment[]
-}
+ }
 
 model Account {
   id String @id @default(auto()) @map("_id") @db.ObjectId
@@ -45,7 +44,6 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
-
 model Post {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   description String
@@ -54,26 +52,27 @@ model Post {
   updatedAt   DateTime  @updatedAt
   author      User      @relation(fields: [authorId], references: [id])
   authorId    String    @db.ObjectId
-  commentsId  String[]  @db.ObjectId
+  parentPost  Post?     @relation("Replies", fields: [parentPostId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentPostId String?   @db.ObjectId
   likesId     String[]  @db.ObjectId
-  comments    Comment[] 
+  replies     Post[]    @relation("Replies")
 }
 
-model Comment {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  text      String
-  imageUrl  String?
-  createdAt DateTime  @default(now())
-  author    User      @relation(fields: [authorId], references: [id])
-  authorId  String    @db.ObjectId
-  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    String    @db.ObjectId
-  replyToId String?   @db.ObjectId
-  replyTo   Comment?  @relation("ReplyTo", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  replies   Comment[] @relation("ReplyTo")
-  commentId String?
-  likesId   String[]  @db.ObjectId
-}
+// model Comment {
+//   id        String    @id @default(auto()) @map("_id") @db.ObjectId
+//   text      String
+//   imageUrl  String?
+//   createdAt DateTime  @default(now())
+//   author    User      @relation(fields: [authorId], references: [id])
+//   authorId  String    @db.ObjectId
+//   post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+//   postId    String    @db.ObjectId
+//   replyToId String?   @db.ObjectId
+//   replyTo   Comment?  @relation("ReplyTo", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+//   replies   Comment[] @relation("ReplyTo")
+//   commentId String?
+//   likesId   String[]  @db.ObjectId
+// }
 
 // model Like {
 //   id        String   @id @default(auto()) @map("_id") @db.ObjectId

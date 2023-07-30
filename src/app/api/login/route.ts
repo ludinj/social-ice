@@ -7,7 +7,6 @@ interface RequestBody {
   password: string;
 }
 export async function POST(request: Request) {
-  console.log('called');
   try {
     const body: RequestBody = await request.json();
 

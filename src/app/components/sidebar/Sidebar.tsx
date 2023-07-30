@@ -46,7 +46,7 @@ const sidebarItems = [
 ];
 const Sidebar: FC<SidebarProps> = ({}) => {
   const { status, data } = useSession();
-  console.log(data?.user);
+
   if (status === 'loading') {
     console.log('loading');
   }
